@@ -18,15 +18,16 @@ all_files = [
 ]
 savename = "output/initial_plot_light.gif"
 t0 = 7  # The initial data is all blank
-tend = 40  # Demonstrates importing data across files
+tend = 100  # Demonstrates importing data across files
 
 # Load data
 all_data = xr.open_mfdataset(all_files)
 fig, ax = plt.subplots()
 
 # Define functions for plotting
-min_data = all_data.SIF.min(skipna=True).values
-max_data = all_data.SIF.max(skipna=True).values
+# For some reason the database contains very extreme values. Most lie in a smaller range
+min_data = -3  # all_data.SIF.min(skipna=True).values
+max_data = 5  # all_data.SIF.max(skipna=True).values
 
 def date_conv(day):
     return day.astype('datetime64[D]')
@@ -37,17 +38,15 @@ ax = plt.axes(projection=ccrs.PlateCarree())
 cmap = matplotlib.cm.get_cmap("viridis")  # "gist_earth"
 cmap.set_bad("white", 1.0)
 plot_options = {
-    "vmax": max_data,
-    "vmin": min_data,
+   "vmax": max_data,
+   "vmin": min_data,
     "cmap": cmap,
-    "origin": "upper",
-    "transform": ccrs.PlateCarree(),
 }
 
 
 def animate(i):
     line = ax.imshow(
-        all_data.SIF[i, :, :],
+        all_data.SIF[i, :, :], **plot_options
     )
     date = date_conv(all_data.time[i].values)
     plt.title(title_str.format(date))
@@ -70,5 +69,5 @@ anim = animation.FuncAnimation(
 )
 # Save the animation
 timestart = time.time()
-anim.save(savename + "_01.gif", writer=writer)
+anim.save(savename, writer=writer)
 print("Animation took {}".format(time.time() - timestart))
