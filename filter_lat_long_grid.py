@@ -14,7 +14,7 @@ def filter_lat_long(lat_lims, long_lims, nc):
         (lats > lat_lims[0]) & (lats > lat_lims[1])
     ]
     long_inds = longs[
-        (longs > long_lims[0]) & (longs > long_lims[1])
+        (longs > long_lims[0]) & (longs < long_lims[1])
     ]
     return nc.sel(lat=lat_inds, lon=long_inds)
 
@@ -28,5 +28,3 @@ for file in all_files:
     long_lims = [-124.6, -114.1]
     filtered_nc = filter_lat_long(lat_lims, long_lims, all_data)
     filtered_nc.to_netcdf(path=savename, mode="w")
-
-
