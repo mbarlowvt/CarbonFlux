@@ -11,7 +11,7 @@ def filter_lat_long(lat_lims, long_lims, nc):
     lats = nc.variables["lat"][:]
     longs = nc.variables["lon"][:]
     lat_inds = lats[
-        (lats > lat_lims[0]) & (lats > lat_lims[1])
+        (lats > lat_lims[0]) & (lats < lat_lims[1])
     ]
     long_inds = longs[
         (longs > long_lims[0]) & (longs < long_lims[1])
