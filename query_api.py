@@ -31,12 +31,13 @@ def longitude_max(tower: FluxTower, precision=.0001):
 class QueryService:
     url = 'https://co2.jpl.nasa.gov/wps'
 
-    def __init__(self, precision=.0001):
+    def __init__(self, dataset='OCO2L2Stdv10', precision=.0001):
+        self.dataset = dataset
         self.precision = precision
 
     # Going the route of string formed query params. Requests seems to be fighting me on the param parsing a bit
     def generate_query_params(self, tower: FluxTower) -> str:
-        return r'?service=wps&version=1.0.0&request=execute&identifier=query&datainputs=dataset=OCO2L2Stdv10;' + \
+        return r'?service=wps&version=1.0.0&request=execute&identifier=query&datainputs=dataset=' + self.dataset + r';' + \
            beginning_date(tower) + r';' + end_date(tower) + r';' + \
                longitude_min(tower, precision=self.precision) + r';' + longitude_max(tower, precision=self.precision) + \
                latitude_min(tower, precision=self.precision) + r';' + latitude_max(tower, precision=self.precision) + r';' + \

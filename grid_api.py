@@ -39,12 +39,13 @@ def variables(vs: List[str]):
 class GridApi:
     url = 'http://co2.jpl.nasa.gov/wps/'
 
-    def __init__(self, precision=.0001):
+    def __init__(self, dataset='OCO2L2Stdv10', precision=.0001):
+        self.dataset = 'OCO2L2Stdv10'
         self.precision = precision
 
     # Going the route of string formed query params. Requests seems to be fighting me on the param parsing a bit
     def generate_grid_query_params(self, tower: FluxTower, vs: List[str]):
-        return r'?service=wps&version=1.0.0&request=execute&identifier=grid&datainputs=dataset=OCO2L2Stdv10;' + \
+        return r'?service=wps&version=1.0.0&request=execute&identifier=grid&datainputs=dataset=' + self.dataset + r';' + \
            beginning_date(tower) + r';' + end_date(tower) + r';' + longitude_min(tower) + r';' + longitude_max(tower) + \
            latitude_min(tower) + r';' + latitude_max(tower) + r';' + \
            variables(vs) + \
