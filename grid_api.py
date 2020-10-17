@@ -29,10 +29,10 @@ def longitude_max(tower: FluxTower, precision=.0001):
     return str(tower.longitude + precision)
 
 
-def variables(vs: list[str]):
+def variables(vs: List[str]):
     v = r''
     for var in vs:
-        v + 'variable=' + var + r';'
+        v = v + 'variable=' + var + r';'
     return v
 
 
@@ -43,12 +43,12 @@ class GridApi:
         self.precision = precision
 
     # Going the route of string formed query params. Requests seems to be fighting me on the param parsing a bit
-    def generate_grid_query_params(tower: FluxTower, vs: List[str]):
+    def generate_grid_query_params(self, tower: FluxTower, vs: List[str]):
         return r'?service=wps&version=1.0.0&request=execute&identifier=grid&datainputs=dataset=OCO2L2Stdv10;' + \
            beginning_date(tower) + r';' + end_date(tower) + r';' + longitude_min(tower) + r';' + longitude_max(tower) + \
            latitude_min(tower) + r';' + latitude_max(tower) + r';' + \
            variables(vs) + \
-           r'format=netcdf;'
+           r'format=netcdf;&status=true&storeExecuteResponse=true'
 
     def get_tower_query(self, tower, vs: List[str]):
         query_params = self.generate_grid_query_params(tower, vs)
