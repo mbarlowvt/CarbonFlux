@@ -10,7 +10,7 @@ towers = extract_towers('cali_towers.csv')
 filtered_towers = filter(FluxTower.useful_tower, towers)
 
 # Set up grid api (optionally add precision here)
-grid_api = GridApi()
+grid_api = GridApi(email=r'', precision=1)
 
 # Pick variables for the grid API
 grid_vars = [
@@ -28,6 +28,19 @@ grid_vars = [
     "albedo_sco2",
 ]
 
-resp = grid_api.get_tower_query(towers[1], grid_vars)
-print(resp.text)
-print(resp.content)
+tower_responses = []
+counter = 0
+for tower in filtered_towers:
+    print(counter)
+    if counter >= 1:
+        print("exiting")
+        break
+    else:
+        print("exploring tower " + str(counter))
+        resp = grid_api.get_tower_query(tower, grid_vars)
+        tower_responses.append(resp.text)
+        print(resp.text)
+        print(resp.content)
+        counter += 1
+
+print(tower_responses)
